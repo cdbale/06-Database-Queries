@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Database Queries</title>
+  <title>APIs and Database Queries</title>
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -19,8 +19,8 @@
     var SLIDE_CONFIG = {
       // Slide settings
       settings: {
-                title: 'Database Queries',
-                        subtitle: 'MKTG 411 Marketing Analytics',
+                title: 'APIs and Database Queries',
+                        subtitle: 'MCB Consulting Group (MKTG 411)',
                 useBuilds: true,
         usePrettify: true,
         enableSlideAreas: true,
@@ -3117,8 +3117,9 @@ span.underline{text-decoration: underline;}
 div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -3129,7 +3130,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -3201,7 +3202,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 
 <slide class=""><hgroup><h2>Grading Exercises</h2></hgroup><article  id="grading-exercises">
 
-<p>Remember that you grade your own submitted exercises using the rubric specified in each posted exercise solution, adding comments (using the comment feature for Word documents) where your solution differs from the posted solution.</p>
+<p>Remember that you grade your own exercises using the rubric specified in each posted exercise solution, adding comments (using the comment feature for Word documents) where your solution differs from the posted solution.</p>
 
 </article></slide><slide class=""><hgroup><h2>Marketing Analytics Process</h2></hgroup><article  id="marketing-analytics-process">
 
@@ -3217,7 +3218,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 
 </article></slide><slide class=""><hgroup><h2>Motivating Example</h2></hgroup><article  id="motivating-example">
 
-<p>Now that you better understand how to visualize, summarize, and tidy data, your manager wants you to have more data to increase the breadth and depth of your analysis. However, this additional data is stored in a PostgreSQL database. How can you access it? Have any of you had experience with databases before?</p>
+<p>Patagonia is very impressed with what we’ve been able to do with their in-house data. They have decided to open up additional data sources for us so we can expand our analyses. Patagonia recently used Qualtrics to administer a survey to some of their customers. This survey data will need to be accessed using an API. The second additional source contains information on the revenue from each customer. This data is stored in a SQL data base.</p>
+
+<ul>
+<li>Has anyone used or accessed a database before?</li>
+<li>What about an API?</li>
+</ul>
 
 </article></slide><slide class=""><hgroup><h2>Computer Orientation</h2></hgroup><article  id="computer-orientation">
 
@@ -3282,6 +3288,152 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 
 <p>Take a second to organize your files for this class in the way I’ve just described. You may wish to create three folders within your main MKTG 411 folder, one for each unit, and then include sub-folders for notes, data, exercises, and projects within each. For future exercises and projects, starting with the one for exercise 6, include a .Rproj file in your folder to help you easily access the working directory you need.</p>
 
+</article></slide><slide class=""><hgroup><h2>APIs</h2></hgroup><article  id="apis">
+
+<p><strong>APIs</strong> (Application Programming Interfaces) are a <em>general</em> way to access any server that provide permission to access data along with securely controlling what and how much data you can access.</p>
+
+<center>
+
+<img width="850px" src='data:image/png;base64,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' title=''/>
+
+</center>
+
+</article></slide><slide class=""><hgroup><h2>API Clients</h2></hgroup><article  id="api-clients">
+
+<p>To use an API you should use an <strong>API client</strong> specific to the server. There are a plethora of R packages that provide API clients for specific servers (e.g., {twitteR}, {Rfacebook}, {RGoogleAnalytics}, {WikipediR}, {qualtRics}). API clients differ, but they typically require at least:</p>
+
+<ul>
+<li>Key: An API key is like a username that can change.</li>
+<li>Token: An API token is like a password that can change.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Use an API</h2></hgroup><article  id="use-an-api">
+
+<p>Install and load the {qualtRics} package so that we can access the survey data.</p>
+
+<p>In the console (NOT a code chunk), call the following:</p>
+
+<pre class = 'prettyprint lang-r'>qualtRics::qualtrics_api_credentials(
+  api_key = &quot;Ir2JDPvhOjSmMIpWo8bwVUAbvPs6uwGqIKipAuo6&quot;, 
+  base_url = &quot;sjc1.qualtrics.com&quot;,
+  install = TRUE
+)</pre>
+
+</article></slide><slide class=""><hgroup><h2>What Did We Just Do?</h2></hgroup><article  id="what-did-we-just-do">
+
+<p>Let’s draw it out.</p>
+
+</article></slide><slide class=""><hgroup><h2>Import Data</h2></hgroup><article  id="import-data">
+
+<p>We can see what surveys are available to download.</p>
+
+<pre class = 'prettyprint lang-r'>all_surveys()</pre>
+
+<p>We can import data using the survey ID.</p>
+
+<pre class = 'prettyprint lang-r'>survey_data &lt;- fetch_survey(&quot;SV_8B5zozRL3hVr8dU&quot;)
+
+survey_data</pre>
+
+</article></slide><slide class=""><hgroup><h2>Let’s AVOID Reconnecting to the API - Write Your Data to your Hard Drive</h2></hgroup><article  id="lets-avoid-reconnecting-to-the-api---write-your-data-to-your-hard-drive">
+
+<pre class = 'prettyprint lang-r'># This code &quot;writes&quot; the data, which means it gets saved locally on your 
+# computer instead of just in this R session.
+
+# Write it as a CSV to use outside of R.
+survey_data |&gt; 
+  write_csv(&quot;example_qualtrics_survey.csv&quot;)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Your Turn!</h2></hgroup><article  id="your-turn-1">
+
+<p>Fetch the &ldquo;Hammocks and Life&rdquo; survey and write it to your local hard drive. Hint: they survey ID is <code>SV_73xYIxZuxsqAx6Z</code>.</p>
+
+</article></slide><slide class=""><hgroup><h2>Expected Survey</h2></hgroup><article  id="expected-survey">
+
+<pre >## Warning: package &#39;qualtRics&#39; was built under R version 4.5.2</pre>
+
+<pre >## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   .default = col_character(),
+##   StartDate = col_datetime(format = &quot;&quot;),
+##   EndDate = col_datetime(format = &quot;&quot;),
+##   Progress = col_double(),
+##   `Duration (in seconds)` = col_double(),
+##   Finished = col_logical(),
+##   RecordedDate = col_datetime(format = &quot;&quot;),
+##   RecipientLastName = col_logical(),
+##   RecipientFirstName = col_logical(),
+##   RecipientEmail = col_logical(),
+##   ExternalReference = col_logical(),
+##   LocationLatitude = col_double(),
+##   LocationLongitude = col_double(),
+##   Q3 = col_double(),
+##   Q6_1 = col_double(),
+##   Q6_2 = col_double(),
+##   Q6_3 = col_double(),
+##   Q6_4 = col_double(),
+##   Q6_5 = col_double(),
+##   Q6_6 = col_double(),
+##   Q6_7 = col_double()
+##   # ... with 23 more columns
+## )
+## ℹ Use `spec()` for the full column specifications.</pre>
+
+<pre >## Warning: There was 1 warning in `dplyr::mutate()`.
+## ℹ In argument: `Q14 = readr::parse_factor(Q14, levels = ln, ordered = TRUE,
+##   include_na = FALSE)`.
+## Caused by warning:
+## ! 121 parsing failures.
+## row col           expected actual
+##   1  -- value in level set  Blue 
+##   2  -- value in level set  Black
+##   3  -- value in level set  Gray 
+##   4  -- value in level set  Green
+##   5  -- value in level set  Blue 
+## ... ... .................. ......
+## See problems(...) for more details.</pre>
+
+</article></slide><slide class=""><hgroup><h2>Expected Survey</h2></hgroup><article  id="expected-survey-1">
+
+<pre class = 'prettyprint lang-r'>hammock_survey_data</pre>
+
+<pre >## # A tibble: 141 × 132
+##    StartDate           EndDate             Status     IPAddress       Progress
+##    &lt;dttm&gt;              &lt;dttm&gt;              &lt;chr&gt;      &lt;chr&gt;              &lt;dbl&gt;
+##  1 2016-10-22 08:18:37 2016-10-22 08:30:31 IP Address 208.117.124.24       100
+##  2 2016-10-22 09:57:55 2016-10-22 10:08:21 IP Address 24.111.133.43        100
+##  3 2016-10-22 10:19:46 2016-10-22 10:29:46 IP Address 67.2.81.30           100
+##  4 2016-10-22 10:21:57 2016-10-22 10:29:51 IP Address 174.23.245.194       100
+##  5 2016-10-22 10:25:34 2016-10-22 10:31:43 IP Address 107.188.142.119      100
+##  6 2016-10-22 10:25:23 2016-10-22 10:33:23 IP Address 73.98.128.211        100
+##  7 2016-10-22 10:38:37 2016-10-22 10:46:59 IP Address 174.52.253.239       100
+##  8 2016-10-22 10:42:43 2016-10-22 10:51:40 IP Address 67.172.248.218       100
+##  9 2016-10-22 11:13:24 2016-10-22 11:22:39 IP Address 71.199.60.41         100
+## 10 2016-10-22 11:10:52 2016-10-22 11:25:42 IP Address 67.2.32.96           100
+## # ℹ 131 more rows
+## # ℹ 127 more variables: `Duration (in seconds)` &lt;dbl&gt;, Finished &lt;lgl&gt;,
+## #   RecordedDate &lt;dttm&gt;, ResponseId &lt;chr&gt;, RecipientLastName &lt;lgl&gt;,
+## #   RecipientFirstName &lt;lgl&gt;, RecipientEmail &lt;lgl&gt;, ExternalReference &lt;lgl&gt;,
+## #   LocationLatitude &lt;dbl&gt;, LocationLongitude &lt;dbl&gt;, DistributionChannel &lt;chr&gt;,
+## #   UserLanguage &lt;chr&gt;, Q3 &lt;dbl&gt;, Q4_1 &lt;chr&gt;, Q4_2 &lt;chr&gt;, Q4_3 &lt;chr&gt;,
+## #   Q4_4 &lt;chr&gt;, Q4_5 &lt;chr&gt;, Q5_1 &lt;chr&gt;, Q5_2 &lt;chr&gt;, Q5_3 &lt;chr&gt;, Q5_4 &lt;chr&gt;, …</pre>
+
+</article></slide><slide class=""><hgroup><h2>Solution</h2></hgroup><article  id="solution">
+
+<pre class = 'prettyprint lang-r'>hammock_survey_data &lt;- fetch_survey(&quot;SV_73xYIxZuxsqAx6Z&quot;)
+
+hammock_survey_data |&gt;
+  write_csv(&quot;example_hammock_survey.csv&quot;)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Databases and SQL Disclaimer</h2></hgroup><article  id="databases-and-sql-disclaimer">
+
+<p>Unfortunately, AWS is being difficult and was not able to set up an example data base for us to use.</p>
+
+<p>HOWEVER…</p>
+
+<p>The process (and principles) are extremely similar to accessing an API. So, we’ll look at example code and call it good!</p>
+
 </article></slide><slide class=""><hgroup><h2>Databases and SQL</h2></hgroup><article  id="databases-and-sql">
 
 <p>As the size and complexity of data grow, it is more likely to be housed on a <strong>database</strong>, a computer or <strong>server</strong> formatted specifically to house data (relational and otherwise). We communicate with a database using <strong>queries</strong> composed in <strong>SQL</strong> (Structured Query Language).</p>
@@ -3303,8 +3455,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 <p>While it probably is a good idea to learn some SQL and specific backends, for <em>simple queries</em> we can write {dplyr} code that {dbplyr} will translate into a query in a specific backend for us. These two package names are similar, but they’re not to be confused. We’ve already worked with {dplyr}, and now we are introducing {dbplyr}.</p>
 
 </article></slide><slide class=""><hgroup><h2>Install and Load Packages</h2></hgroup><article  id="install-and-load-packages">
-
-<p>Click Tools &gt; Install Packages and type in &lsquo;RPostgreSQL&rsquo; to install the R PostgreSQL backend.</p>
 
 <pre class = 'prettyprint lang-r'>library(tidyverse) # tidyverse packages, including dplyr.
 library(dbplyr)    # dbplyr translates dplyr into SQL.
@@ -3423,35 +3573,43 @@ GROUP BY &quot;state&quot;</pre>
 
 </article></slide><slide class=""><hgroup><h2>Write Data</h2></hgroup><article  id="write-data">
 
-<p>We often only import some <em>subset</em> of a data table because it is too big to fit or work with locally. However, once we have the data we need, to avoid needing to reconnect to the database, we can write it locally.</p>
+<p>Similar to APIs, once we have the data we need we can write it locally.</p>
 
 <pre class = 'prettyprint lang-r'># Write it as a CSV to use outside of R.
 store_revenue |&gt; 
   select(-row.names) |&gt; 
-  write_csv(&quot;Data&quot;, &quot;store_revenue.csv&quot;)
+  write_csv(&quot;Data&quot;, &quot;store_revenue.csv&quot;)</pre>
 
-# OR write is as an RDS to use again in R.
-store_revenue |&gt; 
-  select(-row.names) |&gt; 
-  write_rds(&quot;Data&quot;, &quot;store_revenue.rds&quot;)</pre>
+</article></slide><slide class=""><hgroup><h2>Good Practices</h2></hgroup><article  id="good-practices">
+
+<p>We’ve discussed a few good practices when it comes to importing data:</p>
+
+<ul>
+<li>Disconnect from databases after importing data.</li>
+<li>Don’t save sensitive credentials in your code.</li>
+<li>Write data locally (with permission) once it’s been imported.</li>
+</ul>
+
+<p>When we import data from a server in Quarto, every time we render the document it will re-execute and eat up server bandwidth (i.e., database access or API calls). It’s better to do this once and then, if we need to show how we got the data, include the code with the relevant cell set to <code>#| eval: false</code>.</p>
 
 </article></slide><slide class=""><hgroup><h2>Live Coding Exercise</h2></hgroup><article  id="live-coding-exercise">
 
-<p>For a project you’re working on, you need to reconnect to the database and save the customer_data table locally. How would you do this?</p>
+<p>Patagonia currently measures the overall satisfaction level of customers and the likelihood that customers would recommend the store. While these measures have been frequently collected by the company, they don’t have a clear idea of whether they are related to outcomes the company truly cares about, such as revenue. Our task is to investigate these survey results and to determine whether Patagonia should continue to collect these survey responses (and analyze them further) or look for other ways of assessing the customer experience.</p>
+
+<p>(Let’s treat this as a mini-project).</p>
 
 </article></slide><slide class=""><hgroup><h2>Wrapping Up</h2></hgroup><article  id="wrapping-up">
 
 <p><em>Summary</em></p>
 
 <ul>
-<li>Discussed databases.</li>
-<li>Used {dbplyr} to write queries and import data.</li>
+<li>Discussed APIs and databases.</li>
 </ul>
 
 <p><em>Next Time</em></p>
 
 <ul>
-<li>Web scraping and using APIs.</li>
+<li>Dashboards</li>
 </ul>
 
 <p><em>Supplementary Material</em></p>
@@ -3464,7 +3622,7 @@ store_revenue |&gt;
 
 </article></slide><slide class=""><hgroup><h2>Exercise 6</h2></hgroup><article  id="exercise-6">
 
-<p>Let’s return to our recency, frequency, monetary (RFM) analysis. Now we can analyze customers based on how much they have spent. Once again, <em>remember to sketch out what you’d like the data to look like.</em> In RStudio, create a new Quarto document and do the following.</p>
+<p>Patagonia has requested that we re-do our RFM analysis now that we have access to the revenue per month per customer. In RStudio, create a new Quarto document and do the following.</p>
 
 <ol>
 <li>Let’s define customers who have &ldquo;high monetary value&rdquo; as anyone who has spent more than $25,000 total. In its own section of the report, use the <code>store_revenue</code> data to identify these customers. How many &ldquo;high monetary value&rdquo; customers are there?</li>

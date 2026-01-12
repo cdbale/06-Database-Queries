@@ -1,6 +1,6 @@
 ---
-title: "Database Queries"
-subtitle: "MKTG 411 Marketing Analytics"
+title: "APIs and Database Queries"
+subtitle: "MCB Consulting Group (MKTG 411)"
 output: 
   ioslides_presentation:
     widescreen: true
@@ -9,7 +9,7 @@ output:
 
 ## Grading Exercises
 
-Remember that you grade your own submitted exercises using the rubric specified in each posted exercise solution, adding comments (using the comment feature for Word documents) where your solution differs from the posted solution.
+Remember that you grade your own exercises using the rubric specified in each posted exercise solution, adding comments (using the comment feature for Word documents) where your solution differs from the posted solution.
 
 ## Marketing Analytics Process
 
@@ -23,7 +23,10 @@ Remember that you grade your own submitted exercises using the rubric specified 
 
 ## Motivating Example
 
-Now that you better understand how to visualize, summarize, and tidy data, your manager wants you to have more data to increase the breadth and depth of your analysis. However, this additional data is stored in a PostgreSQL database. How can you access it? Have any of you had experience with databases before? She also has some survey data that must be accessed using Qualtrics' API. What is an API, anyway?
+Patagonia is very impressed with what we've been able to do with their in-house data. They have decided to open up additional data sources for us so we can expand our analyses. Patagonia recently used Qualtrics to administer a survey to some of their customers. This survey data will need to be accessed using an API. The second additional source contains information on the revenue from each customer. This data is stored in a SQL data base. 
+
+- Has anyone used or accessed a database before?
+- What about an API?
 
 ## Computer Orientation
 
@@ -78,6 +81,101 @@ When you initiate an R project, R creates a .Rproj file. When you open a .Rproj 
 
 Take a second to organize your files for this class in the way I've just described. You may wish to create three folders within your main MKTG 411 folder, one for each unit, and then include sub-folders for notes, data, exercises, and projects within each. For future exercises and projects, starting with the one for exercise 6, include a .Rproj file in your folder to help you easily access the working directory you need.
 
+## APIs
+
+**APIs** (Application Programming Interfaces) are a *general* way to access any server that provide permission to access data along with securely controlling what and how much data you can access.
+
+<center>
+![](Figures/import_api.png){width=850px}
+</center>
+
+## API Clients
+
+To use an API you should use an **API client** specific to the server. There are a plethora of R packages that provide API clients for specific servers (e.g., {twitteR}, {Rfacebook}, {RGoogleAnalytics}, {WikipediR}, {qualtRics}). API clients differ, but they typically require at least:
+
+- Key: An API key is like a username that can change.
+- Token: An API token is like a password that can change.
+
+## Use an API
+
+Install and load the {qualtRics} package so that we can access the survey data.
+
+In the console (NOT a code chunk), call the following:
+
+```{r eval=FALSE}
+qualtRics::qualtrics_api_credentials(
+  api_key = "Ir2JDPvhOjSmMIpWo8bwVUAbvPs6uwGqIKipAuo6", 
+  base_url = "sjc1.qualtrics.com",
+  install = TRUE
+)
+```
+
+## What Did We Just Do?
+
+Let's draw it out.
+
+## Import Data
+
+We can see what surveys are available to download.
+
+```{r eval=FALSE}
+all_surveys()
+```
+
+We can import data using the survey ID.
+
+```{r eval=FALSE}
+survey_data <- fetch_survey("SV_8B5zozRL3hVr8dU")
+
+survey_data
+```
+
+## Let's AVOID Reconnecting to the API - Write Your Data to your Hard Drive
+
+```{r, eval = FALSE}
+
+# This code "writes" the data, which means it gets saved locally on your 
+# computer instead of just in this R session.
+
+# Write it as a CSV to use outside of R.
+survey_data |> 
+  write_csv("example_qualtrics_survey.csv")
+```
+
+## Your Turn!
+
+Fetch the "Hammocks and Life" survey and write it to your local hard drive. Hint: they survey ID is `SV_73xYIxZuxsqAx6Z`.
+
+## Expected Survey
+
+```{r, echo=FALSE, results=FALSE}
+library(qualtRics)
+hammock_survey_data <- fetch_survey("SV_73xYIxZuxsqAx6Z")
+```
+
+## Expected Survey
+
+```{r}
+hammock_survey_data
+```
+
+## Solution
+
+```{r, eval=FALSE}
+hammock_survey_data <- fetch_survey("SV_73xYIxZuxsqAx6Z")
+
+hammock_survey_data |>
+  write_csv("example_hammock_survey.csv")
+```
+
+## Databases and SQL Disclaimer
+
+Unfortunately, AWS is being difficult and was not able to set up an example data base for us to use.
+
+HOWEVER...
+
+The process (and principles) are extremely similar to accessing an API. So, we'll look at example code and call it good!
+
 ## Databases and SQL
 
 As the size and complexity of data grow, it is more likely to be housed on a **database**, a computer or **server** formatted specifically to house data (relational and otherwise). We communicate with a database using **queries** composed in **SQL** (Structured Query Language).
@@ -97,8 +195,6 @@ So we need to not only know SQL, we need to know a specific backend in order to 
 While it probably is a good idea to learn some SQL and specific backends, for *simple queries* we can write {dplyr} code that {dbplyr} will translate into a query in a specific backend for us. These two package names are similar, but they're not to be confused. We've already worked with {dplyr}, and now we are introducing {dbplyr}.
 
 ## Install and Load Packages
-
-Click Tools > Install Packages and type in 'RPostgreSQL' to install the R PostgreSQL backend.
 
 ```{r eval=FALSE}
 library(tidyverse) # tidyverse packages, including dplyr.
@@ -246,64 +342,13 @@ dbDisconnect(connection)
 
 ## Write Data
 
-We often only import some *subset* of a data table because it is too big to fit or work with locally. However, once we have the data we need, to avoid needing to reconnect to the database, we can write it locally.
+Similar to APIs, once we have the data we need we can write it locally.
 
 ```{r eval=FALSE}
 # Write it as a CSV to use outside of R.
 store_revenue |> 
   select(-row.names) |> 
   write_csv("Data", "store_revenue.csv")
-
-# OR write is as an RDS to use again in R.
-store_revenue |> 
-  select(-row.names) |> 
-  write_rds("Data", "store_revenue.rds")
-```
-
-## APIs
-
-Databases are a type of server. Instead of querying a database, **APIs** (Application Programming Interfaces) are a *general* way to access any server that provide permission to access data along with securely controlling what and how much data you can access.
-
-<center>
-![](Figures/import_api.png){width=850px}
-</center>
-
-## API Clients
-
-Just like SQL has a variety of *backends*, to use an API you should use an **API client** specific to the server. Also like SQL backends, there are a plethora of R packages that provide API clients for specific servers (e.g., {twitteR}, {Rfacebook}, {RGoogleAnalytics}, {WikipediR}, {qualtRics}). API clients differ, but they typically require at least:
-
-- Key: An API key is like a username that can change.
-- Token: An API token is like a password that can change.
-
-## Use an API
-
-Install and load the {qualtRics} package so that we can access the survey data. Remember to press Tools then Install Packages to install it before trying to load it.
-
-In the console (NOT a code chunk), call the following:
-
-```{r eval=FALSE}
-qualtRics::qualtrics_api_credentials(
-  api_key = "Ir2JDPvhOjSmMIpWo8bwVUAbvPs6uwGqIKipAuo6", 
-  base_url = "sjc1.qualtrics.com"
-)
-
-readRenviron("~/.Renviron")
-```
-
-## Import Data
-
-We can see what surveys are available to download.
-
-```{r eval=FALSE}
-all_surveys()
-```
-
-We can import data by using the survey ID.
-
-```{r eval=FALSE}
-survey_data <- fetch_survey("SV_8B5zozRL3hVr8dU")
-
-survey_data
 ```
 
 ## Good Practices
@@ -316,33 +361,21 @@ We've discussed a few good practices when it comes to importing data:
 
 When we import data from a server in Quarto, every time we render the document it will re-execute and eat up server bandwidth (i.e., database access or API calls). It's better to do this once and then, if we need to show how we got the data, include the code with the relevant cell set to `#| eval: false`.
 
-## Your Turn!
-
-Save the data locally as a CSV. Then set the chunk where you accessed the survey data to `#| eval: false`.
-
-## Solution 
-
-```{r eval=FALSE}
-
-survey_data |> 
-  write_csv("store_revenue.csv")
-
-```
-
 ## Live Coding Exercise
 
-For a project you're working on, you need to reconnect to the database and save the customer_data table locally. How would you do this?
+Patagonia currently measures the overall satisfaction level of customers and the likelihood that customers would recommend the store. While these measures have been frequently collected by the company, they don't have a clear idea of whether they are related to outcomes the company truly cares about, such as revenue. Our task is to investigate these survey results and to determine whether Patagonia should continue to collect these survey responses (and analyze them further) or look for other ways of assessing the customer experience.
+
+(Let's treat this as a mini-project).
 
 ## Wrapping Up
 
 *Summary*
 
-- Discussed databases.
-- Used {dbplyr} to write queries and import data.
+- Discussed APIs and databases.
 
 *Next Time*
 
-- Web scraping and using APIs.
+- Dashboards
 
 *Supplementary Material*
 
@@ -352,7 +385,7 @@ For a project you're working on, you need to reconnect to the database and save 
 
 ## Exercise 6
 
-Let's return to our recency, frequency, monetary (RFM) analysis. Now we can analyze customers based on how much they have spent. Once again, *remember to sketch out what you'd like the data to look like.* In RStudio, create a new Quarto document and do the following.
+Patagonia has requested that we re-do our RFM analysis now that we have access to the revenue per month per customer. In RStudio, create a new Quarto document and do the following.
 
 1. Let's define customers who have "high monetary value" as anyone who has spent more than $25,000 total. In its own section of the report, use the `store_revenue` data to identify these customers. How many "high monetary value" customers are there?
 2. In its own section of the report, report on the composition of these customers by visualizing the relationship between their total revenue, credit, gender, and marital status all in a single visualization. Report on what you discover.

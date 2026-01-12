@@ -24,37 +24,11 @@ Let's first import `store_revenue`. Let's start with how we retrieve it from the
 ```{r}
 # Load packages.
 library(tidyverse)
-library(dbplyr)
-library(DBI)
 ```
-
-```{r eval=FALSE}
-# Connect to the database.
-con <- dbConnect(
-  RPostgreSQL::PostgreSQL(),
-  dbname = "analyticsdb",
-  host = "analyticsdb.ccutuqssh92k.us-west-2.rds.amazonaws.com",
-  port = 55432,
-  user = "quantmktg",
-  password = rstudioapi::askForPassword("Database password")
-)
-
-# Import the data.
-store_revenue <- tbl(con, "store_revenue") |>
-  collect()
-
-# Disconnect from the database.
-dbDisconnect(con)
-
-# Write the data locally.
-write_csv(store_revenue, here::here("Data", "store_revenue.csv"))
-```
-
-Or, if you've already written it locally.
 
 ```{r}
 # Import the data.
-store_revenue <- read_csv(here::here("Data", "store_revenue.csv"))
+store_revenue <- read_csv("store_revenue.csv")
 ```
 
 Now we can identify "high monetary value" customers as anyone who has spent more than $25,000 total.
@@ -83,7 +57,7 @@ Now we can report on the composition of these customers by visualizing the relat
 
 ```{r}
 # Import customer data.
-customer_data <- read_csv(here::here("Data", "customer_data.csv"))
+customer_data <- read_csv("customer_data.csv")
 ```
 
 ```{r}
@@ -105,4 +79,3 @@ money_cust |>
 ```
 
 It appears that the relationship between total revenue (i.e., how much a customer has spent) and their credit is strongest for unmarried women, married men, and married individuals who have selected "other" as their gender.
-
